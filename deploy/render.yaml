@@ -1,0 +1,30 @@
+# Render blueprint for the ScamSathi API.
+# Render dashboard → New → Blueprint → select this repository.
+services:
+  - type: web
+    name: scamsathi-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.6"
+      - key: APP_ENV
+        value: production
+      # Replace with your deployed frontend origin.
+      - key: ALLOWED_ORIGINS
+        value: https://scamsathi.netlify.app
+      - key: DATABASE_URL
+        value: sqlite:///./scamsathi.db
+      - key: AI_PROVIDER
+        value: none
+      - key: URL_REPUTATION_PROVIDER
+        value: none
+      # Set these in the dashboard, never in this file:
+      # - key: AI_API_KEY
+      #   sync: false
+      # - key: SAFEBROWSING_API_KEY
+      #   sync: false
